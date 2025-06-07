@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boshqotirma</title>
+    <style>
+        /* Asosiy sahifa uslublari */
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        /* O‘yin maydoni uchun grid */
+        .game-board {
+            display: grid;
+            grid-template-rows: repeat(6, auto);
+            gap: 10px;
+        }
+
+        /* Har bir qator (5ta input) */
+        .input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Harf kiritiladigan inputlar */
+        .letter-input {
+            width: 60px;
+            height: 60px;
+            font-size: 32px;
+            text-align: center;
+            text-transform: uppercase;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        /* Fokus holatidagi input */
+        .letter-input:focus {
+            border-color: #007bff;
+            animation: pop 0.2s ease;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Urinishlar haqida ma’lumot */
+        .attempt-info {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+        /* Qayta boshlash tugmasi */
+        .restart-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .restart-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* O‘yin yakuni popup oynasi */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border: 2px solid #ccc;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            text-align: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .popup h2 {
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .popup p {
+            margin-top: 5px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .input-error {
+            border-color: #ff4d4d;
+            background-color: #ff4d4d !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Boshqotirma</h1>
+
+    <!-- O‘yin uchun 6 qatorli inputlar joylanadigan konteyner -->
+    <div class="game-board" id="gameBoard"></div>
+
+    <!-- Urinishlar haqida ma’lumot -->
+    <div class="attempt-info">Urinish: 1 / 6</div>
+
+    <!-- Qayta boshlash tugmasi -->
+    <button class="restart-btn" id="restartBtn" onclick="location.reload()">🔄 Qayta boshlash</button>
+
+    <!-- G‘alaba/yutqazish uchun popup -->
+    <div class="popup" id="popup">
+        <h2 id="popupTitle"></h2>
+        <div id="starRating" style="font-size: 50px; margin: 10px 0;"></div>
+        <p id="timeSpent"></p>
+        <button class="restart-btn" onclick="location.reload()">🔁 Yana o‘ynash</button>
+    </div>
+
+    <script>
+        // Tasodifiy tanlanadigan so‘zlar ro‘yxati
+        const wordList = [
+            "KITOB", "SAVAT", "KURSI", "QALAM", "SUMKA", "GILAM", "SOVUN", "OQSOQ", "KAMAR", "TUGMA",
+            "KALIT", "QOGOZ", "QOZON", "KABEL", "ADYOL", "QADOQ", "BOLTA", "QOZIQ", "OLTIN", "TEMIR",
+            "QOZON", "SOPOL", "TUXUM", "SABZI", "PIYOZ", "BANAN", "GILOS", "QOVUN", "LIMON", "BODOM",
+            "TOVUQ", "BALIQ", "JIGAR", "QATIQ", "KARAM", "QAHVA", "ASKAR", "ARQON", "OSMON", "AYVON"
+        ];
+
+        // Kalit so‘z tasodifiy tanlanadi
+        const secretWord = wordList[Math.floor(Math.random() * wordList.length)];
+
+        const maxAttempts = 6;
+        let currentAttempt = 0;
+        let startTime = Date.now(); // Vaqtni hisoblash uchun boshlanish nuqtasi
+
+        // DOM elementlar
+        const gameBoard = document.getElementById("gameBoard");
+        const attemptInfo = document.querySelector(".attempt-info");
+        const restartBtn = document.getElementById("restartBtn");
+        const popup = document.getElementById("popup");
+        const popupTitle = document.getElementById("popupTitle");
+        const timeSpent = document.getElementById("timeSpent");
+
+        // 6 qatorli input yaratish
+        for (let i = 0; i < maxAttempts; i++) {
+            const row = document.createElement("div");
+            row.className = "input-row";
+            for (let j = 0; j < 5; j++) {
+                const input = document.createElement("input");
+                input.type = "text";
+                input.maxLength = 1;
+                input.className = "letter-input";
+                row.appendChild(input);
+            }
+            gameBoard.appendChild(row);
+        }
+
+        // Urinish ma’lumotini yangilash
+        const updateAttemptInfo = () => {
+            attemptInfo.textContent = `Urinish: ${currentAttempt + 1} / ${maxAttempts}`;
+        };
+
+        // G‘alaba yoki yutqazishda popup ko‘rsatish
+        const showPopup = (titleText) => {
+            const timeUsed = Math.floor((Date.now() - startTime) / 1000);
+            popupTitle.textContent = titleText;
+            timeSpent.textContent = `⏱ Vaqt: ${timeUsed} soniya`;
+
+            const starRating = document.getElementById("starRating");
+            let starsCount = 0;
+
+            if (titleText.includes("Topdingiz")) {
+                const attemptNum = currentAttempt + 1;
+                if (attemptNum <= 2) {
+                    starsCount = 3;
+                } else if (attemptNum <= 4) {
+                    starsCount = 2;
+                } else if (attemptNum <= 6) {
+                    starsCount = 1;
+                } else {
+                    starsCount = 0;
+                }
+            } else {
+                starsCount = 0; // yutqazganlarga yulduz yo'q
+            }
+
+            let starsHtml = "";
+            for (let i = 0; i < 3; i++) {
+                starsHtml += i < starsCount ? "⭐" : "☆";
+            }
+            starRating.innerHTML = starsHtml;
+
+            popup.style.display = "block";
+            restartBtn.style.display = "none";
+        };
+
+        // Harflarni baholash
+        const evaluateGuess = (inputs, guess) => {
+            const result = [];
+            const secretArr = secretWord.split("");
+            const guessArr = guess.split("");
+
+            // To‘g‘ri joydagi harflarni tekshirish
+            for (let i = 0; i < 5; i++) {
+                if (guessArr[i] === secretArr[i]) {
+                    result.push("correct");
+                    secretArr[i] = null; // So‘zda foydalanilgan harfni null qilamiz
+                } else {
+                    result.push(null);
+                }
+            }
+
+            // Qolgan harflarni tekshirish
+            for (let i = 0; i < 5; i++) {
+                if (result[i] === null) {
+                    const index = secretArr.indexOf(guessArr[i]);
+                    result[i] = index !== -1 ? "present" : "absent";
+                    if (index !== -1) secretArr[index] = null;
+                }
+            }
+
+            // Rangi va holatini belgilash
+            for (let i = 0; i < 5; i++) {
+                inputs[i].style.backgroundColor =
+                    result[i] === "correct" ? "#6aaa64" :
+                        result[i] === "present" ? "#c9b458" : "#787c7e";
+                inputs[i].style.color = "white";
+                inputs[i].disabled = true;
+            }
+        };
+
+        // Barcha inputlarni o‘chirib qo‘yish
+        const disableAllInputs = () => {
+            document.querySelectorAll(".letter-input").forEach(inp => inp.disabled = true);
+        };
+
+        // Inputlarni sozlash (eventlar biriktirish)
+        const setupInputs = () => {
+            const allRows = gameBoard.children;
+
+            for (let rowIndex = 0; rowIndex < allRows.length; rowIndex++) {
+                const row = allRows[rowIndex];
+                const inputs = row.querySelectorAll(".letter-input");
+
+                inputs.forEach((input, i) => {
+                    // Harf kiritilganda avtomatik navbatdagi inputga o‘tish
+                    input.addEventListener("input", (e) => {
+                        const val = e.target.value.toUpperCase();
+                        e.target.value = val.slice(0, 1);
+                        if (val && i < inputs.length - 1) inputs[i + 1].focus();
+                    });
+
+                    // Klaviatura tugmalari
+                    input.addEventListener("keydown", (e) => {
+                        // Backspace tugmasi bosilganda oldingi inputga fokus
+                        if (e.key === "Backspace" && !input.value && i > 0) inputs[i - 1].focus();
+
+                        // Chapga harakat
+                        if (e.key === "ArrowLeft" && i > 0) {
+                            const prevInput = inputs[i - 1];
+                            if (!prevInput.disabled) prevInput.focus();
+                        }
+
+                        // O‘ngga harakat
+                        if (e.key === "ArrowRight" && i < inputs.length - 1) {
+                            const nextInput = inputs[i + 1];
+                            if (!nextInput.disabled) nextInput.focus();
+                        }
+
+                        // Enter tugmasi bosilganda qatorni tekshirish
+                        if (e.key === "Enter") {
+                            if (currentAttempt >= maxAttempts) return;
+
+                            const currentRow = gameBoard.children[currentAttempt];
+                            const currentInputs = currentRow.querySelectorAll(".letter-input");
+                            const guess = [...currentInputs].map(inp => inp.value.toUpperCase()).join("");
+
+                            if ([...currentInputs].some(inp => !inp.value)) {
+                                // alert("Iltimos, 5 ta harfni to‘liq kiriting.");
+                                // Buning o'rniga bo'sh inputlarga class qo'shamiz
+                                [...currentInputs].forEach(inp => {
+                                    if (!inp.value) {
+                                        inp.classList.add("input-error");
+                                        // Keyin 1.5 sekunddan keyin classni olib tashlaymiz
+                                        setTimeout(() => inp.classList.remove("input-error"), 500);
+                                    }
+                                });
+                                return;
+                            }
+
+
+                            evaluateGuess(currentInputs, guess);
+
+                            if (guess === secretWord) {
+                                disableAllInputs();
+                                showPopup(`🎉 Topdingiz! ${currentAttempt + 1}-urinishda`);
+                                return;
+                            }
+
+                            currentAttempt++;
+                            updateAttemptInfo();
+
+                            if (currentAttempt >= maxAttempts) {
+                                disableAllInputs();
+                                showPopup(`😢 O‘yin tugadi! So‘z: ${secretWord}`);
+                                return;
+                            }
+
+                            // Navbatdagi qatordagi birinchi inputga fokus
+                            const nextInputs = gameBoard.children[currentAttempt].querySelectorAll(".letter-input");
+                            nextInputs[0].focus();
+                        }
+                    });
+                });
+            }
+        };
+
+
+        // Boshlanishda funksiyalarni ishga tushirish
+        updateAttemptInfo();
+        setupInputs();
+    </script>
+
+</body>
+
+</html>
