@@ -206,6 +206,26 @@
                 font-size: 1.3rem;
             }
         }
+
+        #creatorTag {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 14px;
+            color: #555;
+            opacity: 0.6;
+            user-select: none;
+            pointer-events: none;
+            font-family: sans-serif;
+        }
+
+        @media (max-width: 480px) {
+            #creatorTag {
+                font-size: 12px;
+                bottom: 8px;
+                right: 8px;
+            }
+        }
     </style>
 </head>
 
@@ -229,6 +249,7 @@
         <p id="timeSpent"></p>
         <button class="restart-btn" onclick="location.reload()">🔁 Yana o‘ynash</button>
     </div>
+    <div id="creatorTag">Yaratuvchi: Mashhurbek</div>
 
     <script>
         // Tasodifiy tanlanadigan so‘zlar ro‘yxati
