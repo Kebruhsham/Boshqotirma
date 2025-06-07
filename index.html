@@ -105,33 +105,60 @@
         }
 
         /* O‘yin yakuni popup oynasi */
-        .popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #fff;
-            border: 2px solid #ccc;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            padding: 30px;
-            text-align: center;
-            z-index: 1000;
-            display: none;
-            max-width: 90%;
-            box-sizing: border-box;
-        }
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    text-align: center;
+    z-index: 1000;
+    display: none;
+    max-width: 90%;
+    box-sizing: border-box;
+    word-wrap: break-word; /* uzun so'zlarni avtomatik qatorga tushurish */
+}
 
-        .popup h2 {
-            margin-bottom: 10px;
-            font-size: 28px;
-        }
+/* Popup sarlavha */
+.popup h2 {
+    margin-bottom: 10px;
+    font-size: 28px;
+}
 
-        .popup p {
-            margin-top: 5px;
-            font-size: 18px;
-            color: #333;
-        }
+/* Popup vaqt */
+.popup p {
+    margin-top: 5px;
+    font-size: 18px;
+    color: #333;
+}
+
+/* Telefonlar uchun popup shrift va joylashuv moslashuvi */
+@media (max-width: 480px) {
+    .popup {
+        padding: 20px;
+        max-width: 95%;
+        width: 90vw;
+    }
+
+    .popup h2 {
+        font-size: 22px;
+        word-break: break-word;
+    }
+
+    .popup p {
+        font-size: 16px;
+    }
+
+    #starRating {
+        font-size: 36px !important;
+        margin: 8px 0;
+    }
+}
+
 
         .input-error {
             border-color: #ff4d4d !important;
