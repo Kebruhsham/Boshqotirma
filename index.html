@@ -105,59 +105,60 @@
         }
 
         /* O‘yin yakuni popup oynasi */
-.popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #fff;
-    border: 2px solid #ccc;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    padding: 30px;
-    text-align: center;
-    z-index: 1000;
-    display: none;
-    max-width: 90%;
-    box-sizing: border-box;
-    word-wrap: break-word; /* uzun so'zlarni avtomatik qatorga tushurish */
-}
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border: 2px solid #ccc;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            text-align: center;
+            z-index: 1000;
+            display: none;
+            max-width: 90%;
+            box-sizing: border-box;
+            word-wrap: break-word;
+            /* uzun so'zlarni avtomatik qatorga tushurish */
+        }
 
-/* Popup sarlavha */
-.popup h2 {
-    margin-bottom: 10px;
-    font-size: 28px;
-}
+        /* Popup sarlavha */
+        .popup h2 {
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
 
-/* Popup vaqt */
-.popup p {
-    margin-top: 5px;
-    font-size: 18px;
-    color: #333;
-}
+        /* Popup vaqt */
+        .popup p {
+            margin-top: 5px;
+            font-size: 18px;
+            color: #333;
+        }
 
-/* Telefonlar uchun popup shrift va joylashuv moslashuvi */
-@media (max-width: 480px) {
-    .popup {
-        padding: 20px;
-        max-width: 95%;
-        width: 90vw;
-    }
+        /* Telefonlar uchun popup shrift va joylashuv moslashuvi */
+        @media (max-width: 480px) {
+            .popup {
+                padding: 20px;
+                max-width: 95%;
+                width: 90vw;
+            }
 
-    .popup h2 {
-        font-size: 22px;
-        word-break: break-word;
-    }
+            .popup h2 {
+                font-size: 22px;
+                word-break: break-word;
+            }
 
-    .popup p {
-        font-size: 16px;
-    }
+            .popup p {
+                font-size: 16px;
+            }
 
-    #starRating {
-        font-size: 36px !important;
-        margin: 8px 0;
-    }
-}
+            #starRating {
+                font-size: 36px !important;
+                margin: 8px 0;
+            }
+        }
 
 
         .input-error {
@@ -232,11 +233,11 @@
     <script>
         // Tasodifiy tanlanadigan so‘zlar ro‘yxati
         const wordList = [
-            "KITOB", "SAVAT", "KURSI", "QALAM", "SUMKA", "GILAM", "SOVUN", "OQSOQ", "KAMAR", "TUGMA",
-            "KALIT", "QOGOZ", "QOZON", "KABEL", "ADYOL", "QADOQ", "BOLTA", "QOZIQ", "OLTIN", "TEMIR",
-            "QOZON", "SOPOL", "TUXUM", "SABZI", "PIYOZ", "BANAN", "GILOS", "QOVUN", "LIMON", "BODOM",
-            "TOVUQ", "BALIQ", "JIGAR", "QATIQ", "KARAM", "QAHVA", "ASKAR", "ARQON", "OSMON", "AYVON",
-            "ARVOH", "GUVOH", "SIYOH", "OLMOS",
+            "KITOB", "SAVAT", "KURSI", "QALAM", "SUMKA", "GILAM", "SOVUN", "OLMOS", "KAMAR", "TUGMA",
+            "KALIT", "QOZON", "KABEL", "ADYOL", "QADOQ", "BOLTA", "QOZIQ", "OLTIN", "TEMIR", "QOZON",
+            "SOPOL", "TUXUM", "SABZI", "PIYOZ", "BANAN", "GILOS", "QOVUN", "LIMON", "BODOM", "TOVUQ",
+            "BALIQ", "JIGAR", "QATIQ", "KARAM", "QAHVA", "ASKAR", "ARQON", "OSMON", "AYVON", "ARVOH",
+            "GUVOH", "SIYOH",
         ];
 
         // Kalit so‘z tasodifiy tanlanadi
@@ -256,20 +257,20 @@
 
         // 6 qatorli input yaratish
         // 6 qatorli input yaratish (inputmode va autocomplete qo'shamiz)
-for (let i = 0; i < maxAttempts; i++) {
-    const row = document.createElement("div");
-    row.className = "input-row";
-    for (let j = 0; j < 5; j++) {
-        const input = document.createElement("input");
-        input.type = "text";
-        input.maxLength = 1;
-        input.className = "letter-input";
-        input.setAttribute("inputmode", "text");  // mobil uchun klaviatura xatti-harakatini yaxshilaydi
-        input.setAttribute("autocomplete", "off"); // avto to'ldirishni o'chirish
-        row.appendChild(input);
-    }
-    gameBoard.appendChild(row);
-}
+        for (let i = 0; i < maxAttempts; i++) {
+            const row = document.createElement("div");
+            row.className = "input-row";
+            for (let j = 0; j < 5; j++) {
+                const input = document.createElement("input");
+                input.type = "text";
+                input.maxLength = 1;
+                input.className = "letter-input";
+                input.setAttribute("inputmode", "text");  // mobil uchun klaviatura xatti-harakatini yaxshilaydi
+                input.setAttribute("autocomplete", "off"); // avto to'ldirishni o'chirish
+                row.appendChild(input);
+            }
+            gameBoard.appendChild(row);
+        }
 
 
         // Urinish ma’lumotini yangilash
@@ -386,45 +387,45 @@ for (let i = 0; i < maxAttempts; i++) {
 
                         // Enter tugmasi bosilganda qatorni tekshirish
                         if (e.key === "Enter") {
-        e.preventDefault(); // Bu juda muhim, telefon avtomatik focusni o'zgartirmasligi uchun
-        
-        if (currentAttempt >= maxAttempts) return;
+                            e.preventDefault(); // Bu juda muhim, telefon avtomatik focusni o'zgartirmasligi uchun
 
-        const currentRow = gameBoard.children[currentAttempt];
-        const currentInputs = currentRow.querySelectorAll(".letter-input");
-        const guess = [...currentInputs].map(inp => inp.value.toUpperCase()).join("");
+                            if (currentAttempt >= maxAttempts) return;
 
-        if ([...currentInputs].some(inp => !inp.value)) {
-            [...currentInputs].forEach(inp => {
-                if (!inp.value) {
-                    inp.classList.add("input-error");
-                    setTimeout(() => inp.classList.remove("input-error"), 500);
-                }
-            });
-            return;
-        }
+                            const currentRow = gameBoard.children[currentAttempt];
+                            const currentInputs = currentRow.querySelectorAll(".letter-input");
+                            const guess = [...currentInputs].map(inp => inp.value.toUpperCase()).join("");
 
-        evaluateGuess(currentInputs, guess);
+                            if ([...currentInputs].some(inp => !inp.value)) {
+                                [...currentInputs].forEach(inp => {
+                                    if (!inp.value) {
+                                        inp.classList.add("input-error");
+                                        setTimeout(() => inp.classList.remove("input-error"), 500);
+                                    }
+                                });
+                                return;
+                            }
 
-        if (guess === secretWord) {
-            disableAllInputs();
-            showPopup(`🎉 Topdingiz! ${currentAttempt + 1}-urinishda`);
-            return;
-        }
+                            evaluateGuess(currentInputs, guess);
 
-        currentAttempt++;
-        updateAttemptInfo();
+                            if (guess === secretWord) {
+                                disableAllInputs();
+                                showPopup(`🎉 Topdingiz! ${currentAttempt + 1}-urinishda`);
+                                return;
+                            }
 
-        if (currentAttempt >= maxAttempts) {
-            disableAllInputs();
-            showPopup(`😢 O‘yin tugadi! So‘z: ${secretWord}`);
-            return;
-        }
+                            currentAttempt++;
+                            updateAttemptInfo();
 
-        const nextInputs = gameBoard.children[currentAttempt].querySelectorAll(".letter-input");
-        nextInputs[0].focus();
-    }
-});
+                            if (currentAttempt >= maxAttempts) {
+                                disableAllInputs();
+                                showPopup(`😢 O‘yin tugadi! So‘z: ${secretWord}`);
+                                return;
+                            }
+
+                            const nextInputs = gameBoard.children[currentAttempt].querySelectorAll(".letter-input");
+                            nextInputs[0].focus();
+                        }
+                    });
                 });
             }
         };
