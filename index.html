@@ -150,7 +150,7 @@
             .restart-btn {
                 font-size: 14px;
                 padding: 8px 16px;
-                max-width: 70%;
+                max-width: 50%;
             }
 
             h1 {
@@ -228,18 +228,22 @@
         const timeSpent = document.getElementById("timeSpent");
 
         // 6 qatorli input yaratish
-        for (let i = 0; i < maxAttempts; i++) {
-            const row = document.createElement("div");
-            row.className = "input-row";
-            for (let j = 0; j < 5; j++) {
-                const input = document.createElement("input");
-                input.type = "text";
-                input.maxLength = 1;
-                input.className = "letter-input";
-                row.appendChild(input);
-            }
-            gameBoard.appendChild(row);
-        }
+        // 6 qatorli input yaratish (inputmode va autocomplete qo'shamiz)
+for (let i = 0; i < maxAttempts; i++) {
+    const row = document.createElement("div");
+    row.className = "input-row";
+    for (let j = 0; j < 5; j++) {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.maxLength = 1;
+        input.className = "letter-input";
+        input.setAttribute("inputmode", "text");  // mobil uchun klaviatura xatti-harakatini yaxshilaydi
+        input.setAttribute("autocomplete", "off"); // avto to'ldirishni o'chirish
+        row.appendChild(input);
+    }
+    gameBoard.appendChild(row);
+}
+
 
         // Urinish ma’lumotini yangilash
         const updateAttemptInfo = () => {
@@ -355,48 +359,45 @@
 
                         // Enter tugmasi bosilganda qatorni tekshirish
                         if (e.key === "Enter") {
-                            if (currentAttempt >= maxAttempts) return;
+        e.preventDefault(); // Bu juda muhim, telefon avtomatik focusni o'zgartirmasligi uchun
+        
+        if (currentAttempt >= maxAttempts) return;
 
-                            const currentRow = gameBoard.children[currentAttempt];
-                            const currentInputs = currentRow.querySelectorAll(".letter-input");
-                            const guess = [...currentInputs].map(inp => inp.value.toUpperCase()).join("");
+        const currentRow = gameBoard.children[currentAttempt];
+        const currentInputs = currentRow.querySelectorAll(".letter-input");
+        const guess = [...currentInputs].map(inp => inp.value.toUpperCase()).join("");
 
-                            if ([...currentInputs].some(inp => !inp.value)) {
-                                // alert("Iltimos, 5 ta harfni to‘liq kiriting.");
-                                // Buning o'rniga bo'sh inputlarga class qo'shamiz
-                                [...currentInputs].forEach(inp => {
-                                    if (!inp.value) {
-                                        inp.classList.add("input-error");
-                                        // Keyin 1.5 sekunddan keyin classni olib tashlaymiz
-                                        setTimeout(() => inp.classList.remove("input-error"), 500);
-                                    }
-                                });
-                                return;
-                            }
+        if ([...currentInputs].some(inp => !inp.value)) {
+            [...currentInputs].forEach(inp => {
+                if (!inp.value) {
+                    inp.classList.add("input-error");
+                    setTimeout(() => inp.classList.remove("input-error"), 500);
+                }
+            });
+            return;
+        }
 
+        evaluateGuess(currentInputs, guess);
 
-                            evaluateGuess(currentInputs, guess);
+        if (guess === secretWord) {
+            disableAllInputs();
+            showPopup(`🎉 Topdingiz! ${currentAttempt + 1}-urinishda`);
+            return;
+        }
 
-                            if (guess === secretWord) {
-                                disableAllInputs();
-                                showPopup(`🎉 Topdingiz! ${currentAttempt + 1}-urinishda`);
-                                return;
-                            }
+        currentAttempt++;
+        updateAttemptInfo();
 
-                            currentAttempt++;
-                            updateAttemptInfo();
+        if (currentAttempt >= maxAttempts) {
+            disableAllInputs();
+            showPopup(`😢 O‘yin tugadi! So‘z: ${secretWord}`);
+            return;
+        }
 
-                            if (currentAttempt >= maxAttempts) {
-                                disableAllInputs();
-                                showPopup(`😢 O‘yin tugadi! So‘z: ${secretWord}`);
-                                return;
-                            }
-
-                            // Navbatdagi qatordagi birinchi inputga fokus
-                            const nextInputs = gameBoard.children[currentAttempt].querySelectorAll(".letter-input");
-                            nextInputs[0].focus();
-                        }
-                    });
+        const nextInputs = gameBoard.children[currentAttempt].querySelectorAll(".letter-input");
+        nextInputs[0].focus();
+    }
+});
                 });
             }
         };
