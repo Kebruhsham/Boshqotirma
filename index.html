@@ -15,7 +15,6 @@
             justify-content: center;
             min-height: 100vh;
             margin: 0 10px;
-            /* Yonlardan ozgina joy */
             background-color: #f9f9f9;
         }
 
@@ -79,7 +78,7 @@
 
         /* Urinishlar haqida ma’lumot */
         .attempt-info {
-            margin-top: 10px;
+            margin-top: 20px;
             font-size: 18px;
             text-align: center;
         }
@@ -97,7 +96,7 @@
             transition: background-color 0.3s ease;
             user-select: none;
             width: 100%;
-            max-width: 360px;
+            max-width: 180px;
         }
 
         .restart-btn:hover {
@@ -249,7 +248,7 @@
         <p id="timeSpent"></p>
         <button class="restart-btn" onclick="location.reload()">🔁 Yana o‘ynash</button>
     </div>
-    <div id="creatorTag">Dasturchi: Mashhurbek</div>
+    <div id="creatorTag">Yaratuvchi: Mashhurbek</div>
 
     <script>
         // Tasodifiy tanlanadigan so‘zlar ro‘yxati
@@ -258,7 +257,7 @@
             "KALIT", "QOZON", "KABEL", "ADYOL", "QADOQ", "BOLTA", "QOZIQ", "OLTIN", "TEMIR", "QOZON",
             "SOPOL", "TUXUM", "SABZI", "PIYOZ", "BANAN", "GILOS", "QOVUN", "LIMON", "BODOM", "TOVUQ",
             "BALIQ", "JIGAR", "QATIQ", "KARAM", "QAHVA", "ASKAR", "ARQON", "OSMON", "AYVON", "ARVOH",
-            "GUVOH", "SIYOH",
+            "GUVOH", "SIYOH"
         ];
 
         // Kalit so‘z tasodifiy tanlanadi
@@ -302,8 +301,14 @@
         // G‘alaba yoki yutqazishda popup ko‘rsatish
         const showPopup = (titleText) => {
             const timeUsed = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(timeUsed / 60);
+            const seconds = timeUsed % 60;
+
             popupTitle.textContent = titleText;
-            timeSpent.textContent = `⏱ Vaqt: ${timeUsed} soniya`;
+            timeSpent.textContent = minutes > 0
+                ? `⏱ Vaqt: ${minutes} daqiqa ${seconds} soniya`
+                : `⏱ Vaqt: ${seconds} soniya`;
+
 
             const starRating = document.getElementById("starRating");
             let starsCount = 0;
